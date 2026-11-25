@@ -4,6 +4,9 @@ on:
   push:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -22,3 +25,11 @@ jobs:
         with:
           name: HisabKhata-APK
           path: app/build/outputs/apk/debug/app-debug.apk
+      - name: Publish APK as a release
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp app/build/outputs/apk/debug/app-debug.apk HisabKhata.apk
+          gh release delete latest --yes --cleanup-tag || true
+          gh release create latest HisabKhata.apk --title "হিসাবের খাতা" --notes "ফোনে HisabKhata.apk নামিয়ে ইনস্টল করুন।"
