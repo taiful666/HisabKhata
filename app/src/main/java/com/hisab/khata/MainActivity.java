@@ -46,7 +46,7 @@ public class MainActivity extends Activity {
     @Override
     public void onBackPressed() {
         web.evaluateJavascript(
-            "(function(){var m=document.getElementById('mask');if(m&&m.classList.contains('on')){m.classList.remove('on');return 'closed'}return 'none'})()",
+            "(window.hisabBack?window.hisabBack():'none')",
             r -> { if (!"\"closed\"".equals(r)) MainActivity.super.onBackPressed(); });
     }
 }

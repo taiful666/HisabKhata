@@ -3,112 +3,117 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>আমার হিসাবের খাতা</title>
+<title>হিসাবের খাতা</title>
 <style>
 /* VOICE: quiet, minimal, personal money diary
-   IDEA: a pocket hisab khata — one page per month, carried forward
-   PICTURE: the month's balance, large, with in/out split under it
-   COLOUR and TYPE: white / ink / blue for income / coral for spend; Hind Siliguri
-   LAYOUT: single column app, bottom tabs: এই মাস · মাসগুলো */
+   IDEA: a pocket hisab khata — one page per salary cycle, carried forward
+   PICTURE: the cycle's balance, large, with in/out split and a daily allowance
+   COLOUR and TYPE: white / ink / blue for income / coral for spend; system Bengali font (offline)
+   LAYOUT: single column app, bottom tabs: হিসাব · দৈনিক · মাসগুলো */
 :root{color-scheme:light dark;
---bg:light-dark(#ffffff,#0f1218);--card:light-dark(#f6f7f9,#181c24);
+--bg:light-dark(#ffffff,#0f1218);--card:light-dark(#f5f6f8,#181c24);
 --ink:light-dark(#121826,#eef1f6);--mute:light-dark(#6b7280,#9aa2b1);
 --line:light-dark(#e7e9ee,#262c38);--in:light-dark(#2453d6,#86a6ff);
 --out:light-dark(#d9483b,#ff8a7e);--insoft:light-dark(#eaf0ff,#1d2640);--outsoft:light-dark(#fdeeec,#38221f)}
 :root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
 *{box-sizing:border-box;min-width:0}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Hind Siliguri","Noto Sans Bengali",system-ui,sans-serif;overflow-x:clip}
-.wrap{max-width:560px;margin:0 auto;padding:16px 16px 110px}
-.top{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.top h1{font-size:18px;margin:0;font-weight:600;color:var(--mute)}
-.month{display:flex;align-items:center;gap:6px}
-.month b{font-size:19px;white-space:nowrap}
-.nav{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-size:22px;cursor:pointer}
-.hero{text-align:center;padding:26px 0 10px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Hind Siliguri","Noto Sans Bengali","Noto Sans",system-ui,sans-serif;overflow-x:clip;-webkit-tap-highlight-color:transparent}
+.wrap{max-width:560px;margin:0 auto;padding:14px 16px 110px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.nav{width:44px;height:44px;flex:none;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-size:22px;cursor:pointer}
+.per{text-align:center;flex:1}
+.per b{display:block;font-size:17px;line-height:1.3}
+.per button{border:0;background:none;color:var(--mute);font:14px inherit;font-family:inherit;cursor:pointer;padding:2px 6px;text-decoration:underline dotted;text-underline-offset:3px}
+.hero{text-align:center;padding:20px 0 6px}
 .hero small{color:var(--mute);font-size:15px}
 .big{font-size:clamp(42px,13vw,60px);font-weight:700;line-height:1.05;white-space:nowrap;letter-spacing:-.5px}
 .big.neg{color:var(--out)}
 .open{font-size:14px;color:var(--mute);margin-top:6px;min-height:22px}
-.split{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
 .split div{border-radius:14px;padding:12px;text-align:center}
 .split .i{background:var(--insoft)}.split .o{background:var(--outsoft)}
 .split span{display:block;font-size:14px;color:var(--mute)}
 .split strong{font-size:21px;white-space:nowrap}
 .i strong{color:var(--in)}.o strong{color:var(--out)}
-.meter{height:8px;border-radius:6px;background:var(--insoft);margin-top:14px;overflow:hidden}
+.meter{height:8px;border-radius:6px;background:var(--insoft);margin-top:12px;overflow:hidden}
 .meter i{display:block;height:100%;background:var(--out);border-radius:6px;transition:width .4s}
-.mtxt{font-size:13px;color:var(--mute);text-align:center;margin-top:6px}
-.btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0 6px}
-.btn{min-height:54px;border-radius:14px;border:0;font:600 17px "Hind Siliguri",sans-serif;cursor:pointer;color:#fff}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
+.stats div{background:var(--card);border-radius:12px;padding:9px 6px;text-align:center}
+.stats span{display:block;font-size:12px;color:var(--mute);line-height:1.3}
+.stats strong{font-size:clamp(14px,4.2vw,17px);white-space:nowrap}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0 6px}
+.btn{min-height:54px;border-radius:14px;border:0;font:600 17px inherit;font-family:inherit;cursor:pointer;color:#fff;padding:0 10px}
 .btn.in{background:var(--in)}.btn.out{background:var(--out)}
+.btn.ink{background:var(--ink);color:var(--bg)}
 :focus-visible{outline:3px solid var(--in);outline-offset:2px}
-.carry{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--card);border-radius:14px;padding:12px 14px;margin-top:12px}
-.carry p{margin:0;font-size:15px}.carry p span{display:block;font-size:13px;color:var(--mute)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--card);border-radius:14px;padding:12px 14px;margin-top:10px}
+.row p{margin:0;font-size:15px}.row p span{display:block;font-size:13px;color:var(--mute)}
 .sw{position:relative;width:52px;height:30px;flex:none;border-radius:20px;border:0;background:var(--line);cursor:pointer}
 .sw::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:left .2s}
 .sw[aria-checked=true]{background:var(--in)}.sw[aria-checked=true]::after{left:25px}
-.seg{display:flex;background:var(--card);border-radius:12px;padding:4px;margin:24px 0 10px}
-.seg button{flex:1;min-height:40px;border:0;border-radius:9px;background:transparent;color:var(--mute);font:600 15px "Hind Siliguri",sans-serif;cursor:pointer}
+.seg{display:flex;background:var(--card);border-radius:12px;padding:4px;margin:20px 0 8px}
+.seg button{flex:1;min-height:40px;border:0;border-radius:9px;background:transparent;color:var(--mute);font:600 15px inherit;font-family:inherit;cursor:pointer}
 .seg button.on{background:var(--bg);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
-h2{font-size:17px;margin:24px 0 8px}
+h2{font-size:17px;margin:22px 0 8px}
 .cat{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;padding:9px 0;border-bottom:1px solid var(--line)}
 .cat .bar{grid-column:1/-1;height:6px;border-radius:4px;background:var(--card)}
 .cat .bar i{display:block;height:100%;border-radius:4px}
 .cat b{text-align:right;white-space:nowrap}.cat b small{color:var(--mute);font-weight:400}
-.day{font-size:13px;color:var(--mute);margin:14px 0 4px;font-weight:600}
+.day{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--mute);margin:16px 0 2px;font-weight:600;padding-bottom:4px;border-bottom:2px solid var(--line)}
+.day span{white-space:nowrap}
 .ent{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:var(--bg);border:0;border-bottom:1px solid var(--line);padding:10px 2px;color:var(--ink);font:inherit;cursor:pointer;min-height:54px}
 .dot{width:10px;height:10px;border-radius:50%;flex:none}
 .ent .t{flex:1}.ent .t span{display:block;font-size:13px;color:var(--mute);overflow-wrap:anywhere}
 .ent .a{font-weight:700;white-space:nowrap}
-.empty{color:var(--mute);text-align:center;padding:22px 8px;font-size:15px}
-/* months */
+.empty{color:var(--mute);text-align:center;padding:20px 8px;font-size:15px}
+.hint{color:var(--mute);font-size:14px;margin:0 0 8px}
+.search{margin:14px 0 4px}
 .mrow{display:block;width:100%;text-align:left;background:var(--card);border:0;border-radius:14px;padding:14px;margin-bottom:10px;color:var(--ink);font:inherit;cursor:pointer}
 .mrow .h{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
-.mrow .h b{font-size:17px}.mrow .h strong{font-size:19px;white-space:nowrap}
+.mrow .h b{font-size:16px}.mrow .h strong{font-size:19px;white-space:nowrap}
 .mrow .bars{display:grid;gap:4px;margin:10px 0 6px}
 .mrow .bars div{height:8px;border-radius:4px}
-.mrow .f{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--mute)}
+.mrow .f{display:flex;justify-content:space-between;gap:4px 10px;flex-wrap:wrap;font-size:13px;color:var(--mute)}
 .mrow .f span{white-space:nowrap}
-.tot{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:14px 0}
+.tot{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0 14px}
 .tot div{background:var(--card);border-radius:12px;padding:10px;text-align:center}
-.tot span{display:block;font-size:13px;color:var(--mute)}.tot strong{font-size:clamp(15px,4.4vw,19px);white-space:nowrap}
-/* tabs */
+.tot span{display:block;font-size:12px;color:var(--mute)}.tot strong{font-size:clamp(14px,4.2vw,18px);white-space:nowrap}
+select{font:16px inherit;font-family:inherit;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);min-height:44px}
 .tabs{position:fixed;left:0;right:0;bottom:0;background:var(--bg);border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom);z-index:5}
 .tabs div{display:flex;max-width:560px;width:100%}
-.tabs button{flex:1;min-height:60px;border:0;background:transparent;color:var(--mute);font:600 15px "Hind Siliguri",sans-serif;cursor:pointer}
+.tabs button{flex:1;min-height:60px;border:0;background:transparent;color:var(--mute);font:600 15px inherit;font-family:inherit;cursor:pointer}
 .tabs button.on{color:var(--ink);box-shadow:inset 0 3px 0 var(--ink)}
-.status{font-size:12px;color:var(--mute);text-align:center;margin-top:20px;min-height:18px}
-/* sheet */
+.status{font-size:12px;color:var(--mute);text-align:center;margin-top:20px}
+.toast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:15px;z-index:20;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw;text-align:center}
+.toast.on{opacity:1}
 .mask{position:fixed;inset:0;background:rgba(8,11,18,.45);display:none;align-items:flex-end;justify-content:center;z-index:9}
 .mask.on{display:flex}
 .sheet{background:var(--bg);width:100%;max-width:560px;border-radius:22px 22px 0 0;padding:18px 16px 26px;max-height:92vh;overflow-y:auto}
-.sheet h3{margin:0 0 6px;font-size:19px}
+.sheet h3{margin:0 0 4px;font-size:19px}
 label{display:block;font-size:14px;color:var(--mute);margin:12px 0 4px}
-input{width:100%;font:16px "Hind Siliguri",sans-serif;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);min-height:48px}
+input,textarea{width:100%;font:16px inherit;font-family:inherit;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);min-height:48px}
 input.amt{font-size:28px;font-weight:700}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.chip{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:20px;padding:6px 12px;font:15px "Hind Siliguri",sans-serif;cursor:pointer;min-height:38px}
+.chip{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:20px;padding:6px 12px;font:15px inherit;font-family:inherit;cursor:pointer;min-height:38px}
 .chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.acts{display:flex;gap:8px;margin-top:16px}.acts .btn{flex:1}
+.acts{display:flex;gap:8px;margin-top:14px}.acts .btn{flex:1}
 .ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
 .del{background:transparent;color:var(--out);border:1px solid var(--out)}
 .err{color:var(--out);font-size:14px;min-height:20px;margin-top:6px}
 [hidden]{display:none!important}
-@media (prefers-reduced-motion:reduce){.meter i,.sw::after{transition:none}}
+@media (prefers-reduced-motion:reduce){.meter i,.sw::after,.toast{transition:none}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="top">
-    <h1>হিসাবের খাতা</h1>
-    <div class="month" id="mnav">
-      <button class="nav" id="prev" aria-label="আগের মাস">‹</button>
-      <b id="mname"></b>
-      <button class="nav" id="next" aria-label="পরের মাস">›</button>
-    </div>
+    <button class="nav" id="prev" aria-label="আগের মাস">‹</button>
+    <div class="per"><b id="pname"></b><button id="pstart" type="button"></button></div>
+    <button class="nav" id="next" aria-label="পরের মাস">›</button>
   </div>
 
-  <section id="vMonth">
+  <!-- ===== হিসাব ===== -->
+  <section id="vMain">
     <div class="hero">
       <small>হাতে আছে</small>
       <div class="big" id="bal">৳০</div>
@@ -119,71 +124,109 @@ input.amt{font-size:28px;font-weight:700}
       <div class="o"><span>খরচ</span><strong id="tout">৳০</strong></div>
     </div>
     <div class="meter"><i id="meter" style="width:0"></i></div>
-    <div class="mtxt" id="mtxt"></div>
+    <div class="stats" id="stats"></div>
 
     <div class="btns">
       <button class="btn in" id="addIn">+ আয়</button>
       <button class="btn out" id="addOut">− খরচ</button>
     </div>
 
-    <div class="carry">
+    <div class="row">
       <p>বাকি টাকা পরের মাসে যোগ হবে<span id="carryTxt"></span></p>
       <button class="sw" id="carrySw" role="switch" aria-checked="false" aria-label="বাকি টাকা পরের মাসে যোগ"></button>
     </div>
 
-    <div class="seg" role="tablist">
-      <button id="sOut" class="on" role="tab">খরচের খাত</button>
-      <button id="sIn" role="tab">আয়ের খাত</button>
-      <button id="sAll" role="tab">সব লেনদেন</button>
+    <div class="seg">
+      <button id="sOut" class="on">খরচের খাত</button>
+      <button id="sIn">আয়ের উৎস</button>
     </div>
     <div id="pane"></div>
   </section>
 
-  <section id="vYear" hidden>
-    <h2 style="margin-top:20px">মাস অনুযায়ী হিসাব</h2>
+  <!-- ===== দৈনিক ===== -->
+  <section id="vDaily" hidden>
+    <input class="search" id="q" type="search" placeholder="খুঁজুন: আইটেম, খাত বা নোট">
+    <div id="daily"></div>
+  </section>
+
+  <!-- ===== মাসগুলো ===== -->
+  <section id="vMonths" hidden>
+    <h2 style="margin-top:18px">সব মাসের হিসাব</h2>
     <div class="tot" id="tot"></div>
     <div id="months"></div>
-    <h2>ব্যাকআপ</h2>
-    <p class="empty" style="text-align:left;padding:0 0 8px">ফোন বদলালে বা অ্যাপ মুছে ফেললে হিসাব যেন না হারায়, মাঝে মাঝে ব্যাকআপ নিজের WhatsApp, ইমেইল বা Drive-এ পাঠিয়ে রাখুন।</p>
+
+    <h2>সেটিং</h2>
+    <div class="row">
+      <p>মাস শুরু হবে প্রতি মাসের<span>যেমন স্যালারি ২৫ তারিখে হলে ২৫ দিন</span></p>
+      <select id="startDay" aria-label="মাস শুরুর তারিখ"></select>
+    </div>
+    <div class="row">
+      <p>নতুন মাসে বাকি টাকা নিজে থেকেই যোগ হবে<span>প্রতি মাসে আলাদা করেও বদলানো যায়</span></p>
+      <button class="sw" id="carryDef" role="switch" aria-checked="false" aria-label="সবসময় বাকি টাকা পরের মাসে যোগ"></button>
+    </div>
+
+    <h2>ব্যাকআপ ও এক্সপোর্ট</h2>
+    <p class="hint">সব হিসাব শুধু এই ফোনেই থাকে। ফোন বদলালে বা অ্যাপ মুছে ফেললে যেন হারিয়ে না যায়, মাঝে মাঝে ব্যাকআপ নিজের WhatsApp, ইমেইল বা Drive-এ পাঠিয়ে রাখুন।</p>
     <div class="btns" style="margin-top:0">
       <button class="btn in" id="bkSend">ব্যাকআপ পাঠান</button>
       <button class="btn ghost" id="bkOpen">ব্যাকআপ ফেরত আনুন</button>
     </div>
+    <button class="btn ghost" id="csv" style="width:100%">এই মাসের হিসাব Excel (CSV) হিসেবে পাঠান</button>
     <div id="bkBox" hidden>
       <label for="bkText">ব্যাকআপের লেখাটা এখানে পেস্ট করুন</label>
-      <textarea id="bkText" rows="5" style="width:100%;font:14px monospace;padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink)"></textarea>
+      <textarea id="bkText" rows="5" style="font:13px monospace"></textarea>
       <div class="err" id="bkErr"></div>
       <button class="btn in" id="bkLoad" style="width:100%">ফেরত আনুন</button>
     </div>
   </section>
 
-  <p class="status" id="status"></p>
+  <p class="status">সব লেখা এই ফোনেই সেভ থাকে — ইন্টারনেট লাগে না।</p>
 </div>
 
 <nav class="tabs"><div>
-  <button id="tMonth" class="on">এই মাস</button>
-  <button id="tYear">মাসগুলো</button>
+  <button id="tMain" class="on">হিসাব</button>
+  <button id="tDaily">দৈনিক</button>
+  <button id="tMonths">মাসগুলো</button>
 </div></nav>
 
+<div class="toast" id="toast" role="status"></div>
+
+<!-- entry form -->
 <div class="mask" id="mask">
   <form class="sheet" id="form" autocomplete="off">
-    <h3 id="ftitle">খরচ</h3>
+    <h3 id="ftitle">খরচ লিখুন</h3>
+    <label for="fdate">তারিখ</label>
+    <input id="fdate" type="date">
+    <label for="fitem" id="fitemL">আইটেমের নাম</label>
+    <input id="fitem" placeholder="যেমন: চাল ৫ কেজি">
     <label for="famt">টাকা</label>
     <input class="amt" id="famt" inputmode="decimal" placeholder="০">
     <label for="fcat" id="fcatL">খাত</label>
     <input id="fcat" placeholder="নিজের মতো লিখুন বা নিচ থেকে বাছুন">
     <div class="chips" id="chips"></div>
-    <label for="fnote">বিস্তারিত (ইচ্ছা হলে)</label>
-    <input id="fnote" placeholder="যেমন: মাকে পাঠালাম">
-    <label for="fdate">তারিখ</label>
-    <input id="fdate" type="date">
     <div class="err" id="ferr"></div>
     <div class="acts">
       <button type="button" class="btn ghost" id="fcancel">বাতিল</button>
       <button type="submit" class="btn out" id="fsave">সেভ</button>
     </div>
+    <button type="button" class="btn ghost" id="fmore" style="width:100%;margin-top:8px">সেভ করে আরেকটা লিখুন</button>
     <div class="acts" id="delrow" hidden><button type="button" class="btn del" id="fdel">মুছে ফেলুন</button></div>
   </form>
+</div>
+
+<!-- period start form -->
+<div class="mask" id="pmask">
+  <div class="sheet">
+    <h3>এই মাসের হিসাব শুরুর তারিখ</h3>
+    <p class="hint" id="phint"></p>
+    <label for="pdate">শুরুর তারিখ</label>
+    <input id="pdate" type="date">
+    <div class="err" id="perr"></div>
+    <div class="acts">
+      <button type="button" class="btn ghost" id="preset">আগের মতো করুন</button>
+      <button type="button" class="btn in" id="psave">সেভ</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -193,178 +236,258 @@ const bn=s=>String(s).replace(/[0-9]/g,d=>BN[d]);
 const toEn=s=>String(s).replace(/[০-৯]/g,d=>BN.indexOf(d)).replace(/[, ৳]/g,'');
 const money=n=>(n<0?'−':'')+'৳'+bn(Math.round(Math.abs(n)).toLocaleString('en-IN'));
 const MONTHS=['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
-const OUTCATS=['বাজার','খাবার','বাসা ভাড়া','যাতায়াত','বিদ্যুৎ/গ্যাস বিল','মোবাইল/নেট','বাড়িতে পাঠানো','দান','গিফট','চিকিৎসা','কেনাকাটা','অন্যান্য'];
+const DAYS=['রবিবার','সোমবার','মঙ্গলবার','বুধবার','বৃহস্পতিবার','শুক্রবার','শনিবার'];
+const OUTCATS=['বাজার','খাবার','বাসা ভাড়া','যাতায়াত','বিল','মোবাইল/নেট','বাড়িতে পাঠানো','দান','গিফট','চিকিৎসা','কেনাকাটা','অন্যান্য'];
 const INCATS=['স্যালারি','বোনাস','ব্যবসা','ফ্রিল্যান্স','উপহার পেয়েছি','অন্যান্য আয়'];
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const $=id=>document.getElementById(id);
 const pad=n=>String(n).padStart(2,'0');
+const iso=d=>d.getUTCFullYear()+'-'+pad(d.getUTCMonth()+1)+'-'+pad(d.getUTCDate());
+const D=s=>new Date(s+'T00:00:00Z');
+const addDays=(s,n)=>{const d=D(s);d.setUTCDate(d.getUTCDate()+n);return iso(d)};
+const diffDays=(a,b)=>Math.round((D(b)-D(a))/864e5);
 const today=()=>{const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())};
-const mLabel=k=>{const [y,m]=k.split('-').map(Number);return MONTHS[m-1]+' '+bn(y)};
 const mShift=(k,n)=>{let [y,m]=k.split('-').map(Number);m+=n;while(m<1){m+=12;y--}while(m>12){m-=12;y++}return y+'-'+pad(m)};
+const dim=k=>{const [y,m]=k.split('-').map(Number);return new Date(Date.UTC(y,m,0)).getUTCDate()};
+const dShort=s=>{const [y,m,d]=s.split('-').map(Number);return bn(d)+' '+MONTHS[m-1]};
+const dLong=s=>{const [y,m,d]=s.split('-').map(Number);return bn(d)+' '+MONTHS[m-1]+', '+DAYS[D(s).getUTCDay()]};
+const isDate=s=>typeof s==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(s);
+const isKey=s=>/^\d{4}-\d{2}$/.test(s);
 
-let entries=[], carry={};
-let cur=today().slice(0,7), view='month', pane='out';
-let editing=null, ftype='out';
+/* ---------- state ---------- */
+let entries=[];   // {id,type:'in'|'out',amount,cat,note(item),date,ts}
+let S={startDay:1,carryDefault:false,carry:{},over:{}}; // carry[key]=true/false, over[key]='YYYY-MM-DD'
+let view='main', pane='out', editing=null, ftype='out';
 const LK='hisab-khata-v1', LS='hisab-khata-set-v1';
-function loadLocal(){try{entries=JSON.parse(localStorage.getItem(LK)||'[]');carry=JSON.parse(localStorage.getItem(LS)||'{}').carry||{}}catch(e){entries=[];carry={}}}
-function saveLocal(){try{localStorage.setItem(LK,JSON.stringify(entries));localStorage.setItem(LS,JSON.stringify({carry}))}catch(e){}}
+function loadLocal(){
+  try{entries=JSON.parse(localStorage.getItem(LK)||'[]').filter(e=>e&&isDate(e.date)&&e.amount>0)}catch(e){entries=[]}
+  try{const s=JSON.parse(localStorage.getItem(LS)||'{}');S={startDay:Math.min(28,Math.max(1,+s.startDay||1)),carryDefault:!!s.carryDefault,carry:s.carry||{},over:s.over||{}}}catch(e){}
+}
+function save(){try{localStorage.setItem(LK,JSON.stringify(entries));localStorage.setItem(LS,JSON.stringify(S))}catch(e){toast('সেভ হয়নি — ফোনের জায়গা দেখুন')}}
 
-/* month math: opening = previous month's closing if that month carries forward */
-function months(){
-  const keys=new Set(entries.map(e=>e.date.slice(0,7)));keys.add(cur);keys.add(today().slice(0,7));
-  const sorted=[...keys].sort();const first=sorted[0],last=sorted[sorted.length-1];
-  const res={};let k=first,prevClose=0,prevCarry=false;
-  while(k<=last){
-    const mine=entries.filter(e=>e.date.slice(0,7)===k);
-    const tin=mine.filter(e=>e.type==='in').reduce((a,e)=>a+e.amount,0);
-    const tout=mine.filter(e=>e.type==='out').reduce((a,e)=>a+e.amount,0);
-    const open=prevCarry?prevClose:0;
-    const close=open+tin-tout;
-    res[k]={k,mine,tin,tout,open,close,n:mine.length};
-    prevClose=close;prevCarry=!!carry[k];k=mShift(k,1);
+/* ---------- periods: key = month the cycle nominally starts in ---------- */
+function startOf(k){const o=S.over[k];if(isDate(o))return o;return k+'-'+pad(Math.min(S.startDay,dim(k)))}
+function endOf(k){return addDays(startOf(mShift(k,1)),-1)}
+function keyOf(date){let k=date.slice(0,7);if(date<startOf(k))k=mShift(k,-1);else if(date>=startOf(mShift(k,1)))k=mShift(k,1);return k}
+function carries(k){return k in S.carry?!!S.carry[k]:S.carryDefault}
+function pLabel(k){
+  const a=startOf(k),b=endOf(k);
+  if(S.startDay===1&&!S.over[k]){const [y,m]=k.split('-').map(Number);return MONTHS[m-1]+' '+bn(y)}
+  return dShort(a)+' – '+dShort(b)+(a.slice(0,4)!==b.slice(0,4)||b.slice(0,4)!==today().slice(0,4)?' '+bn(b.slice(0,4)):'');
+}
+let cur=keyOf(today());
+
+function periods(){
+  const t=keyOf(today());let lo=cur<t?cur:t,hi=cur>t?cur:t;
+  entries.forEach(e=>{const k=keyOf(e.date);if(k<lo)lo=k;if(k>hi)hi=k});
+  const res={};let k=lo,prevClose=0,prevCarry=false;
+  while(k<=hi){
+    const a=startOf(k),b=endOf(k);
+    const mine=entries.filter(e=>e.date>=a&&e.date<=b);
+    const tin=mine.filter(e=>e.type==='in').reduce((s,e)=>s+e.amount,0);
+    const tout=mine.filter(e=>e.type==='out').reduce((s,e)=>s+e.amount,0);
+    const open=prevCarry?prevClose:0, close=open+tin-tout;
+    res[k]={k,a,b,mine,tin,tout,open,close};
+    prevClose=close;prevCarry=carries(k);k=mShift(k,1);
   }
   return res;
 }
 
+/* ---------- render ---------- */
 function catRows(list,total,color){
   const by={};list.forEach(e=>{const c=e.cat||'অন্যান্য';by[c]=(by[c]||0)+e.amount});
   const rows=Object.entries(by).sort((a,b)=>b[1]-a[1]);
-  if(!rows.length)return '';
   return rows.map(([c,v])=>`<div class="cat"><span>${esc(c)}</span><b>${money(v)} <small>${bn(Math.round(v/total*100))}%</small></b><div class="bar"><i style="width:${(v/rows[0][1]*100).toFixed(1)}%;background:${color}"></i></div></div>`).join('');
+}
+function entRow(e){
+  const c=e.type==='in'?'var(--in)':'var(--out)';
+  const title=e.note||e.cat||(e.type==='in'?'আয়':'খরচ');
+  const sub=e.note&&e.cat?e.cat:'';
+  return `<button class="ent" data-id="${esc(e.id)}"><span class="dot" style="background:${c}"></span><span class="t">${esc(title)}${sub?`<span>${esc(sub)}</span>`:''}</span><span class="a" style="color:${c}">${e.type==='in'?'+':'−'}${money(e.amount)}</span></button>`;
+}
+function byDay(list){
+  const s=list.slice().sort((a,b)=>b.date.localeCompare(a.date)||(b.ts||0)-(a.ts||0));
+  let h='',i=0;
+  while(i<s.length){
+    const d=s[i].date,grp=[];while(i<s.length&&s[i].date===d)grp.push(s[i++]);
+    const o=grp.filter(e=>e.type==='out').reduce((a,e)=>a+e.amount,0), n=grp.filter(e=>e.type==='in').reduce((a,e)=>a+e.amount,0);
+    h+=`<div class="day"><span>${dLong(d)}</span><span>${o?'খরচ '+money(o):''}${o&&n?' · ':''}${n?'আয় '+money(n):''}</span></div>`+grp.map(entRow).join('');
+  }
+  return h;
 }
 
 function render(){
-  const M=months(), m=M[cur];
-  $('mname').textContent=mLabel(cur);
-  $('bal').textContent=money(m.close);$('bal').classList.toggle('neg',m.close<0);
-  const pk=mShift(cur,-1);
-  $('open').textContent=m.open?`${mLabel(pk)} থেকে এসেছে ${money(m.open)}`:'';
-  $('tin').textContent=money(m.tin);$('tout').textContent=money(m.tout);
-  const avail=m.open+m.tin;
-  $('meter').style.width=(avail>0?Math.min(100,m.tout/avail*100):(m.tout>0?100:0))+'%';
-  $('mtxt').textContent=avail>0?`হাতের টাকার ${bn(Math.round(m.tout/avail*100))}% খরচ হয়েছে`:'';
-  const on=!!carry[cur];
-  $('carrySw').setAttribute('aria-checked',on);
-  $('carryTxt').textContent=on?`${mLabel(mShift(cur,1))}-এ ${money(m.close)} যোগ হবে`:'বন্ধ — প্রতি মাস শূন্য থেকে শুরু';
+  const P=periods(), p=P[cur], t=today();
+  $('pname').textContent=pLabel(cur);
+  $('pstart').textContent=(S.over[cur]?'শুরু বদলানো হয়েছে: ':'শুরু: ')+dShort(p.a)+' ✎';
 
-  ['sOut','sIn','sAll'].forEach(id=>$(id).classList.toggle('on',id==='s'+pane[0].toUpperCase()+pane.slice(1)));
+  /* main */
+  $('bal').textContent=money(p.close);$('bal').classList.toggle('neg',p.close<0);
+  $('open').textContent=p.open?`আগের মাস থেকে এসেছে ${money(p.open)}`:'';
+  $('tin').textContent=money(p.tin);$('tout').textContent=money(p.tout);
+  const avail=p.open+p.tin;
+  $('meter').style.width=(avail>0?Math.min(100,p.tout/avail*100):(p.tout>0?100:0))+'%';
+  const total=diffDays(p.a,p.b)+1;
+  const active=t>=p.a&&t<=p.b, passed=active?diffDays(p.a,t)+1:(t>p.b?total:0);
+  const left=active?diffDays(t,p.b)+1:0;
+  const avg=passed?p.tout/passed:0;
+  const todayOut=entries.filter(e=>e.type==='out'&&e.date===t).reduce((a,e)=>a+e.amount,0);
+  $('stats').innerHTML=active
+    ?`<div><span>আজকের খরচ</span><strong>${money(todayOut)}</strong></div><div><span>দিনে গড় খরচ</span><strong>${money(avg)}</strong></div><div><span>বাকি ${bn(left)} দিন, দিনে খরচ করা যাবে</span><strong>${money(Math.max(0,p.close)/left)}</strong></div>`
+    :`<div><span>মোট দিন</span><strong>${bn(total)}</strong></div><div><span>দিনে গড় খরচ</span><strong>${money(passed?avg:0)}</strong></div><div><span>সঞ্চয়</span><strong>${money(p.tin-p.tout)}</strong></div>`;
+  const on=carries(cur);
+  $('carrySw').setAttribute('aria-checked',on);
+  $('carryTxt').textContent=on?`পরের মাসে ${money(p.close)} যোগ হবে`:'বন্ধ — পরের মাস শূন্য থেকে শুরু';
+  $('sOut').classList.toggle('on',pane==='out');$('sIn').classList.toggle('on',pane==='in');
   if(pane==='out'){
-    $('pane').innerHTML=catRows(m.mine.filter(e=>e.type==='out'),m.tout,'var(--out)')||'<p class="empty">এই মাসে এখনো কোনো খরচ লেখা হয়নি।</p>';
-  }else if(pane==='in'){
-    $('pane').innerHTML=catRows(m.mine.filter(e=>e.type==='in'),m.tin,'var(--in)')||'<p class="empty">শুরু করতে “+ আয়” চাপুন, যেমন এই মাসের স্যালারি।</p>';
+    $('pane').innerHTML=catRows(p.mine.filter(e=>e.type==='out'),p.tout,'var(--out)')||'<p class="empty">এই মাসে এখনো কোনো খরচ লেখা হয়নি।</p>';
   }else{
-    const s=m.mine.slice().sort((a,b)=>b.date.localeCompare(a.date)||(b.ts||0)-(a.ts||0));
-    let h='',last='';
-    s.forEach(e=>{
-      if(e.date!==last){last=e.date;const d=e.date.split('-');h+=`<div class="day">${bn(+d[2])} ${MONTHS[+d[1]-1]}</div>`}
-      const c=e.type==='in'?'var(--in)':'var(--out)';
-      h+=`<button class="ent" data-id="${esc(e.id)}"><span class="dot" style="background:${c}"></span><span class="t">${esc(e.cat||(e.type==='in'?'আয়':'খরচ'))}${e.note?`<span>${esc(e.note)}</span>`:''}</span><span class="a" style="color:${c}">${e.type==='in'?'+':'−'}${money(e.amount)}</span></button>`;
-    });
-    $('pane').innerHTML=h?h+'<p class="empty" style="padding:12px">কোনো লেখায় চাপ দিলে ঠিক করা বা মুছে ফেলা যাবে।</p>':'<p class="empty">এই মাসে এখনো কিছু লেখা হয়নি।</p>';
+    const ins=p.mine.filter(e=>e.type==='in');
+    $('pane').innerHTML=ins.length?catRows(ins,p.tin,'var(--in)')+'<h2>আয়ের তালিকা (তারিখসহ)</h2>'+byDay(ins):'<p class="empty">শুরু করতে “+ আয়” চাপুন, যেমন স্যালারি — যে তারিখে পেয়েছেন সেই তারিখ দিয়ে।</p>';
   }
 
-  /* months view */
-  const list=Object.values(M).filter(x=>x.n||x.k===cur).reverse();
-  const yr=cur.slice(0,4), Y=Object.values(M).filter(x=>x.k.startsWith(yr));
-  const yin=Y.reduce((a,x)=>a+x.tin,0), yout=Y.reduce((a,x)=>a+x.tout,0);
-  $('tot').innerHTML=`<div><span>${bn(yr)} সালে আয়</span><strong style="color:var(--in)">${money(yin)}</strong></div><div><span>খরচ</span><strong style="color:var(--out)">${money(yout)}</strong></div><div><span>সঞ্চয়</span><strong>${money(yin-yout)}</strong></div>`;
-  const mx=Math.max(1,...list.map(x=>Math.max(x.tin,x.tout)));
-  $('months').innerHTML=list.map(x=>`<button class="mrow" data-k="${x.k}"><div class="h"><b>${mLabel(x.k)}</b><strong${x.close<0?' style="color:var(--out)"':''}>${money(x.close)}</strong></div><div class="bars"><div style="width:${(x.tin/mx*100).toFixed(1)}%;background:var(--in)"></div><div style="width:${(x.tout/mx*100).toFixed(1)}%;background:var(--out)"></div></div><div class="f"><span>আয় ${money(x.tin)}</span><span>খরচ ${money(x.tout)}</span>${x.open?`<span>আগের মাসের ${money(x.open)}</span>`:''}<span>${carry[x.k]?'→ পরের মাসে যাবে':'পরের মাসে যাবে না'}</span></div></button>`).join('')||'<p class="empty">এখনো কোনো মাসের হিসাব নেই।</p>';
+  /* daily */
+  const q=$('q').value.trim().toLowerCase();
+  const list=q?entries.filter(e=>(e.note+' '+e.cat).toLowerCase().includes(q)):p.mine;
+  $('daily').innerHTML=(q?`<p class="hint">${bn(list.length)}টা লেখা পাওয়া গেছে (সব মাস থেকে)</p>`:'')+(byDay(list)||`<p class="empty">${q?'কিছু পাওয়া যায়নি।':'এই মাসে এখনো কিছু লেখা হয়নি। নিচের হিসাব ট্যাব থেকে “− খরচ” চাপুন।'}</p>`)+(list.length?'<p class="empty" style="padding:12px">কোনো লেখায় চাপ দিলে ঠিক করা বা মুছে ফেলা যাবে।</p>':'');
 
-  $('vMonth').hidden=view!=='month';$('vYear').hidden=view!=='year';
-  $('tMonth').classList.toggle('on',view==='month');$('tYear').classList.toggle('on',view==='year');
+  /* months */
+  const all=Object.values(P), rows=all.filter(x=>x.mine.length||x.k===cur).reverse();
+  const yin=all.reduce((a,x)=>a+x.tin,0), yout=all.reduce((a,x)=>a+x.tout,0);
+  $('tot').innerHTML=`<div><span>মোট আয়</span><strong style="color:var(--in)">${money(yin)}</strong></div><div><span>মোট খরচ</span><strong style="color:var(--out)">${money(yout)}</strong></div><div><span>মোট সঞ্চয়</span><strong>${money(yin-yout)}</strong></div>`;
+  const mx=Math.max(1,...rows.map(x=>Math.max(x.tin,x.tout)));
+  $('months').innerHTML=rows.map(x=>`<button class="mrow" data-k="${x.k}"><div class="h"><b>${pLabel(x.k)}</b><strong${x.close<0?' style="color:var(--out)"':''}>${money(x.close)}</strong></div><div class="bars"><div style="width:${(x.tin/mx*100).toFixed(1)}%;background:var(--in)"></div><div style="width:${(x.tout/mx*100).toFixed(1)}%;background:var(--out)"></div></div><div class="f"><span>আয় ${money(x.tin)}</span><span>খরচ ${money(x.tout)}</span>${x.open?`<span>আগের মাসের ${money(x.open)}</span>`:''}<span>${carries(x.k)?'→ পরের মাসে যাবে':'পরের মাসে যাবে না'}</span></div></button>`).join('');
+  $('startDay').value=String(S.startDay);
+  $('carryDef').setAttribute('aria-checked',S.carryDefault);
+
+  for(const [v,id] of [['main','vMain'],['daily','vDaily'],['months','vMonths']]){$(id).hidden=view!==v;$('t'+id.slice(1)).classList.toggle('on',view===v)}
 }
 
+let tt;function toast(m){$('toast').textContent=m;$('toast').classList.add('on');clearTimeout(tt);tt=setTimeout(()=>$('toast').classList.remove('on'),2200)}
+
+/* ---------- entry form ---------- */
 function chips(){
   const base=ftype==='in'?INCATS:OUTCATS;
-  const used=[...new Set(entries.filter(e=>e.type===ftype).map(e=>e.cat).filter(Boolean))];
-  const all=[...new Set([...used,...base])];
-  const v=$('fcat').value.trim();
+  const used=[...new Set(entries.filter(e=>e.type===ftype).sort((a,b)=>(b.ts||0)-(a.ts||0)).map(e=>e.cat).filter(Boolean))];
+  const all=[...new Set([...used,...base])];const v=$('fcat').value.trim();
   $('chips').innerHTML=all.map(c=>`<button type="button" class="chip${c===v?' on':''}" data-c="${esc(c)}">${esc(c)}</button>`).join('');
 }
+function defaultDate(){const t=today(),p=periods()[cur];return t>=p.a&&t<=p.b?t:p.a}
 function openForm(type,e){
   ftype=type;editing=e||null;
-  $('ftitle').textContent=e?'লেখা ঠিক করুন':(type==='in'?'আয় যোগ করুন':'খরচ লিখুন');
-  $('fcatL').textContent=type==='in'?'কোথা থেকে আয় এলো':'কোন খাতে খরচ';
-  $('fsave').className='btn '+(type==='in'?'in':'out');
+  const isIn=type==='in';
+  $('ftitle').textContent=e?'লেখা ঠিক করুন':(isIn?'আয় যোগ করুন':'খরচ লিখুন');
+  $('fitemL').textContent=isIn?'বিস্তারিত (ইচ্ছা হলে)':'আইটেমের নাম';
+  $('fitem').placeholder=isIn?'যেমন: নভেম্বরের বেতন':'যেমন: চাল ৫ কেজি';
+  $('fcatL').textContent=isIn?'আয়ের উৎস':'খাত';
+  $('fsave').className='btn '+(isIn?'in':'out');
+  $('fdate').value=e?e.date:defaultDate();
+  $('fitem').value=e?(e.note||''):'';
   $('famt').value=e?bn(e.amount):'';
-  $('fcat').value=e?(e.cat||''):(type==='in'?'স্যালারি':'');
-  $('fnote').value=e?(e.note||''):'';
-  const t=today();$('fdate').value=e?e.date:(t.slice(0,7)===cur?t:cur+'-01');
-  $('ferr').textContent='';$('delrow').hidden=!e;$('fdel').textContent='মুছে ফেলুন';$('fdel').dataset.sure='';
-  chips();$('mask').classList.add('on');setTimeout(()=>$('famt').focus(),60);
+  $('fcat').value=e?(e.cat||''):(isIn?'স্যালারি':'');
+  $('ferr').textContent='';$('delrow').hidden=!e;$('fmore').hidden=!!e;
+  $('fdel').textContent='মুছে ফেলুন';$('fdel').dataset.sure='';
+  chips();$('mask').classList.add('on');
+  setTimeout(()=>(isIn?$('famt'):$('fitem')).focus(),80);
 }
-function closeForm(){$('mask').classList.remove('on');editing=null}
-
-async function persist(e,remove){
-  saveLocal();
-  return true;
-}
-async function persistSettings(){
-  saveLocal();
-  return true;
-}
-
-$('form').addEventListener('submit',async ev=>{
-  ev.preventDefault();
+function closeAll(){$('mask').classList.remove('on');$('pmask').classList.remove('on');editing=null}
+function submit(again){
   const amount=parseFloat(toEn($('famt').value));
-  if(!(amount>0)){$('ferr').textContent='টাকার পরিমাণ লিখুন।';return}
-  const date=$('fdate').value||today();
-  const e={id:editing?editing.id:('e'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)),type:ftype,amount,cat:$('fcat').value.trim().slice(0,60),note:$('fnote').value.trim().slice(0,200),date,ts:editing?editing.ts:Date.now()};
-  const before=entries.slice();const i=entries.findIndex(x=>x.id===e.id);
-  if(i>=0)entries[i]=e;else entries.push(e);
-  cur=date.slice(0,7);closeForm();render();
-  if(!await persist(e)){entries=before;render()}
-});
-$('fdel').addEventListener('click',async()=>{
+  if(!(amount>0)){$('ferr').textContent='টাকার পরিমাণ লিখুন।';$('famt').focus();return}
+  const date=isDate($('fdate').value)?$('fdate').value:today();
+  let cat=$('fcat').value.trim().slice(0,60), note=$('fitem').value.trim().slice(0,200);
+  if(ftype==='out'&&!cat)cat='অন্যান্য';
+  const e={id:editing?editing.id:('e'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)),type:ftype,amount,cat,note,date,ts:editing?editing.ts:Date.now()};
+  const i=entries.findIndex(x=>x.id===e.id);if(i>=0)entries[i]=e;else entries.push(e);
+  save();cur=keyOf(date);
+  if(again){$('fitem').value='';$('famt').value='';$('ferr').textContent='';chips();render();toast(`সেভ হয়েছে: ${note||cat} ${money(amount)}`);$('fitem').focus();return}
+  closeAll();render();toast('সেভ হয়েছে');
+}
+$('form').addEventListener('submit',ev=>{ev.preventDefault();submit(false)});
+$('fmore').addEventListener('click',()=>submit(true));
+$('fdel').addEventListener('click',()=>{
   const b=$('fdel');if(!b.dataset.sure){b.dataset.sure='1';b.textContent='নিশ্চিত? আবার চাপুন';return}
-  const e=editing;if(!e)return;const before=entries.slice();
-  entries=entries.filter(x=>x.id!==e.id);closeForm();render();
-  if(!await persist(e,true)){entries=before;render()}
-});
-$('carrySw').addEventListener('click',async()=>{
-  const prev=carry[cur];carry={...carry};if(prev)delete carry[cur];else carry[cur]=true;render();
-  if(!await persistSettings()){carry={...carry};if(prev)carry[cur]=true;else delete carry[cur];render()}
+  if(!editing)return;entries=entries.filter(x=>x.id!==editing.id);save();closeAll();render();toast('মুছে ফেলা হয়েছে');
 });
 $('chips').addEventListener('click',ev=>{const c=ev.target.closest('.chip');if(!c)return;$('fcat').value=c.dataset.c;chips()});
 $('fcat').addEventListener('input',chips);
-$('fcancel').addEventListener('click',closeForm);
-$('mask').addEventListener('click',ev=>{if(ev.target===$('mask'))closeForm()});
-document.addEventListener('keydown',ev=>{if(ev.key==='Escape')closeForm()});
+$('fcancel').addEventListener('click',closeAll);
+for(const m of ['mask','pmask'])$(m).addEventListener('click',ev=>{if(ev.target===$(m))closeAll()});
+document.addEventListener('keydown',ev=>{if(ev.key==='Escape')closeAll()});
+window.hisabBack=()=>{if($('mask').classList.contains('on')||$('pmask').classList.contains('on')){closeAll();return 'closed'}if(view!=='main'){view='main';render();return 'closed'}return 'none'};
+
+/* ---------- period start override ---------- */
+$('pstart').addEventListener('click',()=>{
+  const k=cur, nominal=k+'-'+pad(Math.min(S.startDay,dim(k)));
+  $('phint').textContent=`সাধারণত এই মাস শুরু হয় ${dShort(nominal)} থেকে। স্যালারি আগে বা পরে পেলে এখানে আসল তারিখটা দিন — আগের মাস সেদিনের আগের দিন শেষ হবে।`;
+  $('pdate').value=startOf(k);$('pdate').min=addDays(nominal,-15);$('pdate').max=addDays(nominal,15);
+  $('perr').textContent='';$('pmask').classList.add('on');
+});
+$('psave').addEventListener('click',()=>{
+  const v=$('pdate').value,k=cur,nominal=k+'-'+pad(Math.min(S.startDay,dim(k)));
+  if(!isDate(v)){$('perr').textContent='তারিখ দিন।';return}
+  if(Math.abs(diffDays(nominal,v))>15){$('perr').textContent='সাধারণ তারিখের ১৫ দিনের মধ্যে দিন।';return}
+  if(v<=startOf(mShift(k,-1))||v>=startOf(mShift(k,1))){$('perr').textContent='আগের বা পরের মাসের শুরুর সাথে মিলে যাচ্ছে।';return}
+  if(v===nominal)delete S.over[k];else S.over[k]=v;
+  save();closeAll();render();toast('শুরুর তারিখ বদলানো হয়েছে');
+});
+$('preset').addEventListener('click',()=>{delete S.over[cur];save();closeAll();render()});
+
+/* ---------- controls ---------- */
+$('carrySw').addEventListener('click',()=>{S.carry[cur]=!carries(cur);save();render()});
+$('carryDef').addEventListener('click',()=>{S.carryDefault=!S.carryDefault;S.carry={};save();render();toast(S.carryDefault?'এখন থেকে বাকি টাকা পরের মাসে যোগ হবে':'বাকি টাকা আর পরের মাসে যোগ হবে না')});
+$('startDay').innerHTML=Array.from({length:28},(_,i)=>`<option value="${i+1}">${bn(i+1)} তারিখ</option>`).join('');
+$('startDay').addEventListener('change',ev=>{S.startDay=+ev.target.value;S.over={};cur=keyOf(today());save();render();toast(`এখন থেকে মাস শুরু হবে ${bn(S.startDay)} তারিখে`)});
 $('addIn').addEventListener('click',()=>openForm('in'));
 $('addOut').addEventListener('click',()=>openForm('out'));
 $('prev').addEventListener('click',()=>{cur=mShift(cur,-1);render()});
 $('next').addEventListener('click',()=>{cur=mShift(cur,1);render()});
 $('sOut').addEventListener('click',()=>{pane='out';render()});
 $('sIn').addEventListener('click',()=>{pane='in';render()});
-$('sAll').addEventListener('click',()=>{pane='all';render()});
-$('tMonth').addEventListener('click',()=>{view='month';render()});
-$('tYear').addEventListener('click',()=>{view='year';render()});
-$('pane').addEventListener('click',ev=>{const b=ev.target.closest('.ent');if(!b)return;const e=entries.find(x=>x.id===b.dataset.id);if(e)openForm(e.type,e)});
-$('months').addEventListener('click',ev=>{const b=ev.target.closest('.mrow');if(!b)return;cur=b.dataset.k;view='month';render();window.scrollTo(0,0)});
+$('tMain').addEventListener('click',()=>{view='main';render();scrollTo(0,0)});
+$('tDaily').addEventListener('click',()=>{view='daily';render();scrollTo(0,0)});
+$('tMonths').addEventListener('click',()=>{view='months';render();scrollTo(0,0)});
+$('q').addEventListener('input',render);
+const openEnt=ev=>{const b=ev.target.closest('.ent');if(!b)return;const e=entries.find(x=>x.id===b.dataset.id);if(e)openForm(e.type,e)};
+$('pane').addEventListener('click',openEnt);$('daily').addEventListener('click',openEnt);
+$('months').addEventListener('click',ev=>{const b=ev.target.closest('.mrow');if(!b)return;cur=b.dataset.k;view='main';render();scrollTo(0,0)});
 
-loadLocal();render();
+/* ---------- backup / export ---------- */
+function share(txt){try{if(window.Android&&Android.share){Android.share(txt);return true}}catch(e){}return false}
 $('bkSend').addEventListener('click',()=>{
-  const txt=JSON.stringify({app:'hisab-khata',v:1,entries,carry});
-  try{if(window.Android&&Android.share){Android.share(txt);return}}catch(e){}
+  const txt=JSON.stringify({app:'hisab-khata',v:2,entries,settings:S});
+  if(share(txt))return;
   $('bkBox').hidden=false;$('bkText').value=txt;$('bkText').select();
   try{document.execCommand('copy');$('bkErr').textContent='কপি হয়েছে — কোথাও পেস্ট করে রাখুন।'}catch(e){}
 });
-$('bkOpen').addEventListener('click',()=>{$('bkBox').hidden=!$('bkBox').hidden;$('bkErr').textContent=''});
+$('csv').addEventListener('click',()=>{
+  const p=periods()[cur];const q=s=>'"'+String(s).replace(/"/g,'""')+'"';
+  const lines=[['তারিখ','ধরন','আইটেম/বিস্তারিত','খাত/উৎস','টাকা'].map(q).join(',')]
+    .concat(p.mine.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(e=>[e.date,e.type==='in'?'আয়':'খরচ',e.note,e.cat,e.amount].map(q).join(',')));
+  lines.push('',[q('মোট আয়'),p.tin].join(','),[q('মোট খরচ'),p.tout].join(','),[q('বাকি'),p.close].join(','));
+  const txt=lines.join('\n');
+  if(share(txt))return;
+  $('bkBox').hidden=false;$('bkText').value=txt;$('bkText').select();
+  try{document.execCommand('copy');$('bkErr').textContent='কপি হয়েছে।'}catch(e){}
+});
+$('bkOpen').addEventListener('click',()=>{$('bkBox').hidden=!$('bkBox').hidden;$('bkErr').textContent='';$('bkText').value=''});
 $('bkLoad').addEventListener('click',()=>{
   const b=$('bkLoad');
   try{
     const d=JSON.parse($('bkText').value.trim());
     if(!d||!Array.isArray(d.entries))throw 0;
-    const clean=d.entries.filter(x=>x&&typeof x.amount==='number'&&x.amount>0&&/^\d{4}-\d{2}-\d{2}$/.test(x.date||'')).map(x=>({id:String(x.id||('e'+Math.random().toString(36).slice(2))),type:x.type==='in'?'in':'out',amount:x.amount,cat:String(x.cat||'').slice(0,60),note:String(x.note||'').slice(0,200),date:x.date,ts:Number(x.ts)||0}));
-    if(!b.dataset.sure){b.dataset.sure='1';b.textContent=`${bn(clean.length)}টা লেখা পাওয়া গেছে — বর্তমান হিসাবের জায়গায় বসাতে আবার চাপুন`;return}
-    const c={};if(d.carry&&typeof d.carry==='object')for(const k in d.carry)if(/^\d{4}-\d{2}$/.test(k)&&d.carry[k])c[k]=true;
-    entries=clean;carry=c;saveLocal();render();
+    const clean=d.entries.filter(x=>x&&typeof x.amount==='number'&&x.amount>0&&isDate(x.date)).map(x=>({id:String(x.id||('e'+Math.random().toString(36).slice(2))),type:x.type==='in'?'in':'out',amount:x.amount,cat:String(x.cat||'').slice(0,60),note:String(x.note||'').slice(0,200),date:x.date,ts:Number(x.ts)||0}));
+    if(!b.dataset.sure){b.dataset.sure='1';b.textContent=`${bn(clean.length)}টা লেখা পাওয়া গেছে — বসাতে আবার চাপুন`;return}
+    const s=d.settings||{};const carry={},over={};
+    const sc=s.carry||d.carry||{};for(const k in sc)if(isKey(k))carry[k]=!!sc[k];
+    for(const k in (s.over||{}))if(isKey(k)&&isDate(s.over[k]))over[k]=s.over[k];
+    entries=clean;S={startDay:Math.min(28,Math.max(1,+s.startDay||1)),carryDefault:!!s.carryDefault,carry,over};
+    save();cur=keyOf(today());render();
     b.dataset.sure='';b.textContent='ফেরত আনুন';$('bkErr').textContent='হিসাব ফেরত এসেছে।';
   }catch(e){$('bkErr').textContent='লেখাটা ঠিক ব্যাকআপ মনে হচ্ছে না।';b.dataset.sure='';b.textContent='ফেরত আনুন'}
 });
 
-$('status').textContent='সব লেখা এই ফোনেই সেভ থাকে — ইন্টারনেট লাগে না।';
+loadLocal();cur=keyOf(today());render();
 }
 </script>
 </body>
